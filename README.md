@@ -1,70 +1,126 @@
-# Getting Started with Create React App
+# Math Question Generator
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A Vite + React app for generating randomised, LaTeX-rendered exam questions from parameterised templates.
 
-## Available Scripts
+## Quick Start
 
-In the project directory, you can run:
+```bash
+npm install
+npm run dev
+```
 
-### `npm start`
+Then open [http://localhost:5173](http://localhost:5173).
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Project Structure
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```
+src/
+├── engine/
+│   ├── templateEngine.js     # Param generation, substitution, rendering pipeline
+│   └── computations.js       # All math compute functions (cross product, eigenvalues, etc.)
+│
+├── topics/                   # One file per topic — templates live here
+│   ├── vectors.js
+│   ├── systemsOfLinearEquations.js
+│   ├── matrices.js
+│   ├── eigenvectorsEigenvalues.js
+│   ├── multivariableCalculus.js
+│   └── calculus.js
+│
+├── subjects/                 # Groups topics into subjects
+│   ├── index.js              # Master registry — import all subjects here
+│   ├── ENG1005.js            # Engineering Maths (imports all topic files)
+│   ├── ENG1014.js            # Scaffold — add your topics/templates
+│   ├── ENG1011.js            # Scaffold — add your topics/templates
+│   └── ACC1100.js            # Scaffold — add your topics/templates
+│
+├── components/
+│   ├── TopicSidebar.jsx      # Subject tabs + topic/subtopic checkboxes
+│   ├── QuestionCard.jsx      # Question display with answer/working-out/note
+│   ├── NoteModal.jsx         # Per-question note pop-up (localStorage)
+│   └── AllNotesPanel.jsx     # View all saved notes
+│
+├── hooks/
+│   └── useNotes.js           # localStorage note persistence hook
+│
+└── styles/
+    ├── global.css            # Reset + CSS variables
+    └── app.css               # All component styles
+```
 
-### `npm test`
+## How Templates Work
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Each template is a plain object:
 
-### `npm run build`
+```js
+{
+  id:         'vec-cross-1',           // unique string
+  name:       'Cross product',         // display name
+  topic:      'Vectors',
+  subtopic:   'Cross/vector product',
+  difficulty: 'medium',               // 'easy' | 'medium' | 'hard'
+  compute:    'crossProduct',          // key into computations registry (or null)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+  params: {
+    a1: { min: -5, max: 5, nonzero: true },
+    // ... one entry per {{placeholder}}
+  },
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+  // Single solution (most templates):
+  question: 'Find $\\vec{a} \\times \\vec{b}$ where $\\vec{a} = \\langle {{a1}}, ... \\rangle$',
+  solution: '$$\\vec{a}\\times\\vec{b} = \\langle {{rx}}, {{ry}}, {{rz}} \\rangle$$',
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+  // Branching solution (when compute returns a branch string):
+  solution_intersect: '...',
+  solution_skew:      '...',
+}
+```
 
-### `npm run eject`
+### Placeholders
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- `{{paramName}}` — replaced with the generated value for that param
+- `{{computedVar}}` — replaced with values returned by the compute function
+- Negative numbers are automatically wrapped in parentheses to avoid `+ -3`
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Adding a new compute function
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+1. Write your function in `src/engine/computations.js`:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```js
+function myCompute({ a, b }) {
+  const result = a * b
+  return {
+    vars:   { result },   // these become available as {{result}}
+    branch: null,         // or a string to select solution_<branch>
+  }
+}
+```
 
-## Learn More
+2. Add it to the `computations` export map:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```js
+export const computations = {
+  // ...existing
+  myCompute,
+}
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+3. Reference it in your template: `compute: 'myCompute'`
 
-### Code Splitting
+### Adding a new subject (e.g. ENG1020)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+1. Create `src/subjects/ENG1020.js` following the pattern in `ENG1014.js`
+2. Import and add it in `src/subjects/index.js`
 
-### Analyzing the Bundle Size
+## Notes
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- Notes are saved to `localStorage` with the key prefix `mqg::note::`
+- Each note is keyed by `subtopic::questionIndex`
+- View all notes via the "All Notes" button in the top bar
 
-### Making a Progressive Web App
+## Build for production
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```bash
+npm run build
+npm run preview
+```
