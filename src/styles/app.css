@@ -707,3 +707,313 @@ mjx-container { overflow-x: auto; max-width: 100%; }
 .btn-pill.sm { padding: 4px 10px; font-size: 11px; }
 .btn-pill.danger { color: var(--danger); border-color: var(--danger-border); }
 .btn-pill.danger:hover { background: var(--danger-dim); }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MOBILE & BUTTON FIXES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Sidebar hidden on mobile — toggled by hamburger */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 40;
+}
+
+.hamburger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px; height: 36px;
+  background: none;
+  border: 1px solid var(--border-mid);
+  border-radius: var(--r-md);
+  color: var(--text-2);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* Question actions — always stack on small screens, never overflow */
+.q-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+  margin-bottom: 0;
+}
+
+.btn-reveal {
+  flex: 1 1 auto;
+  min-width: 130px;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+/* Written question text */
+.q-text-written {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-1);
+  margin-bottom: 0;
+}
+.q-text-written p { margin-bottom: 5px; }
+.q-text-written p:last-child { margin-bottom: 0; }
+
+/* Written answer block */
+.written-answer {
+  font-size: 13.5px;
+  line-height: 1.75;
+}
+.written-answer p { margin-bottom: 6px; }
+.written-answer p:last-child { margin-bottom: 0; }
+
+.ft-explanation {
+  font-size: 13px;
+  color: var(--text-2);
+  margin-bottom: 10px;
+  font-style: italic;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FINANCIAL TABLES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.ft-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-top: 4px;
+}
+
+.ft-report-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-1);
+  margin-bottom: 2px;
+}
+.ft-report-date {
+  font-size: 12px;
+  color: var(--text-2);
+  margin-bottom: 8px;
+}
+
+/* Base table */
+.ft-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+  min-width: 380px;
+}
+
+.ft-table th {
+  padding: 6px 10px;
+  background: var(--bg-raised);
+  border-bottom: 1px solid var(--border-mid);
+  color: var(--text-2);
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.ft-cell {
+  padding: 5px 10px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-1);
+  vertical-align: top;
+}
+
+.ft-date    { width: 58px; white-space: nowrap; }
+.ft-no      { width: 44px; white-space: nowrap; }
+.ft-money   { width: 90px; text-align: right; white-space: nowrap; }
+.ft-details { }
+.ft-muted   { color: var(--text-3) !important; }
+
+.ft-debit-account  { font-weight: 500; }
+.ft-credit-account { color: var(--text-2); padding-left: 24px !important; }
+
+.ft-narration-row td { padding-top: 0; padding-bottom: 4px; }
+.ft-narration {
+  font-size: 11.5px;
+  color: var(--text-3);
+  font-style: italic;
+  padding-left: 24px !important;
+}
+
+.ft-spacer td { height: 8px; border: none; }
+
+/* Total row */
+.ft-total-row td {
+  border-top: 2px solid var(--border-mid);
+  font-weight: 600;
+}
+.ft-total-label { }
+.ft-total { color: var(--text-1); }
+.ft-bold { font-weight: 600; }
+
+/* ── T-account ledger ─────────────────────────────────────────────────────── */
+.ft-ledger-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.ft-t-account {
+  border: 1px solid var(--border-mid);
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+
+.ft-t-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
+  background: var(--bg-raised);
+  border-bottom: 1px solid var(--border-mid);
+}
+.ft-t-name { font-size: 12px; font-weight: 600; }
+.ft-t-no   { font-size: 11px; color: var(--text-3); font-family: var(--font-mono); }
+
+.ft-t-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.ft-t-side-hdr {
+  padding: 4px 8px;
+  background: var(--bg);
+  color: var(--text-3);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.ft-t-divider {
+  width: 1px;
+  background: var(--border-mid);
+  padding: 0;
+}
+
+.ft-t-date { width: 40px; padding: 4px 6px; color: var(--text-3); font-size: 11px; white-space: nowrap; }
+.ft-t-desc { padding: 4px 6px; color: var(--text-2); }
+.ft-t-amt  { width: 70px; padding: 4px 8px; text-align: right; white-space: nowrap; }
+
+.ft-t-balance-row td {
+  border-top: 1px solid var(--border-mid);
+  background: var(--bg-raised);
+  font-weight: 600;
+}
+.ft-t-balance-label { padding: 4px 8px; color: var(--text-3); font-size: 11px; text-align: right; }
+.ft-t-balance-amt   { padding: 4px 8px; text-align: right; }
+
+/* ── Statements checkbox table ────────────────────────────────────────────── */
+.ft-statements-table { min-width: 600px; }
+.ft-stmt-tx   { width: 40%; padding: 7px 10px; }
+.ft-stmt-hdr  { width: 15%; text-align: center; font-size: 10px; line-height: 1.3; }
+.ft-stmt-check { text-align: center; }
+.ft-check-tick {
+  color: var(--success);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* ── Calc table ───────────────────────────────────────────────────────────── */
+.ft-calc-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-2);
+  margin-bottom: 6px;
+}
+.ft-calc-table  { min-width: 240px; }
+.ft-calc-label  { padding: 5px 10px; }
+
+/* ── Adjustment summary table (Q1 topic 4) ─────────────────────────────────  */
+.ft-adj-table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-top: 8px; }
+.ft-adj-table th {
+  padding: 6px 10px;
+  background: var(--bg-raised);
+  border-bottom: 1px solid var(--border-mid);
+  color: var(--text-2);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: left;
+}
+.ft-adj-table td {
+  padding: 5px 10px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.ft-adj-type { font-weight: 500; width: 28%; }
+.ft-adj-is   { width: 36%; }
+.ft-adj-bs   { width: 36%; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RESPONSIVE / MOBILE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  :root { --sidebar-w: 280px; }
+
+  .hamburger { display: flex; }
+
+  /* Sidebar slides in from left as overlay */
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    z-index: 50;
+    transform: translateX(-100%);
+    transition: transform 0.22s ease;
+    box-shadow: 4px 0 24px rgba(0,0,0,0.4);
+  }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-overlay.open { display: block; }
+
+  /* Main takes full width */
+  .main-area { width: 100%; }
+
+  /* Top bar — tighter on mobile */
+  .top-bar { padding: 10px 14px; gap: 8px; }
+  .app-title { font-size: 14px; }
+
+  /* Gen bar wraps */
+  .gen-bar {
+    padding: 8px 14px;
+    gap: 10px;
+  }
+  .gen-bar-status { width: 100%; }
+
+  /* Question list padding */
+  .question-list { padding: 12px 14px; gap: 10px; }
+
+  /* Question card */
+  .q-card-body { padding: 12px; }
+  .q-text { font-size: 13.5px; }
+
+  /* Buttons — full width on very small screens */
+  .btn-reveal { min-width: 0; flex: 1 1 45%; }
+
+  /* Modals full screen on mobile */
+  .modal-backdrop { padding: 0; align-items: flex-end; }
+  .modal-box, .notes-panel {
+    max-width: 100%;
+    border-radius: var(--r-xl) var(--r-xl) 0 0;
+    max-height: 92vh;
+  }
+
+  /* Financial tables — allow horizontal scroll */
+  .ft-ledger-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .q-subtopic { font-size: 11px; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .btn-reveal { flex: 1 1 100%; }
+}

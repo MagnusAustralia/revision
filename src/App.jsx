@@ -13,6 +13,7 @@ import AllNotesPanel  from './components/AllNotesPanel'
 import { useNotes }   from './hooks/useNotes'
 import { subjects }   from './subjects/index'
 import { renderTemplate } from './engine/templateEngine'
+import { renderWrittenTemplate } from './engine/writtenTemplateEngine'
 
 export default function App() {
   // ── Subject / topic selection ──────────────────────────────────────────────
@@ -77,7 +78,11 @@ export default function App() {
     for (let i = 0; i < count; i++) {
       const tmpl = applicableTemplates[Math.floor(Math.random() * applicableTemplates.length)]
       try {
-        out.push(renderTemplate(tmpl))
+        // Use written engine for mode:'written' templates, math engine otherwise
+        const rendered = (tmpl.mode === 'written' || tmpl.computeFn)
+          ? renderWrittenTemplate(tmpl)
+          : renderTemplate(tmpl)
+        out.push(rendered)
       } catch (err) {
         console.error(`Failed to render template "${tmpl.id}":`, err)
       }
