@@ -11,14 +11,15 @@ import TopicSidebar   from './components/TopicSidebar'
 import QuestionCard   from './components/QuestionCard'
 import AllNotesPanel  from './components/AllNotesPanel'
 import { useNotes }   from './hooks/useNotes'
+import { usePersistedState } from './hooks/usePersistedState'
 import { subjects }   from './subjects/index'
 import { renderTemplate } from './engine/templateEngine'
 import { renderWrittenTemplate } from './engine/writtenTemplateEngine'
 
 export default function App() {
   // ── Subject / topic selection ──────────────────────────────────────────────
-  const [activeSubject, setActiveSubject] = useState('ENG1005')
-  const [selected, setSelected]           = useState({})   // { subtopicName: bool }
+  const [activeSubject, setActiveSubject] = usePersistedState('activeSubject', 'ENG1005')
+  const [selected,      setSelected]      = usePersistedState('selected', {})
 
   const handleSubjectChange = (id) => {
     setActiveSubject(id)
@@ -38,9 +39,9 @@ export default function App() {
   }, [])
 
   // ── Generation controls ────────────────────────────────────────────────────
-  const [qCount,    setQCount]    = useState(5)
-  const [unlimited, setUnlimited] = useState(false)
-  const [questions, setQuestions] = useState([])
+  const [qCount,        setQCount]        = usePersistedState('qCount', 5)
+  const [unlimited,     setUnlimited]     = usePersistedState('unlimited', false)
+  const [questions,     setQuestions]     = usePersistedState('questions', [])
 
   const subject = subjects.find(s => s.id === activeSubject)
 

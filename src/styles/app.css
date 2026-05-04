@@ -182,6 +182,7 @@ mjx-container { overflow-x: auto; max-width: 100%; }
   flex-direction: column;
   overflow: hidden;
   min-width: 0;
+  min-height: 0;
 }
 
 /* Top bar */
@@ -333,10 +334,13 @@ mjx-container { overflow-x: auto; max-width: 100%; }
 .question-list {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 16px 20px;
   display: flex;
   flex-direction: column;
   gap: 12px;
+  min-height: 0;
+  height: 0;
 }
 
 .empty-state {
@@ -355,6 +359,7 @@ mjx-container { overflow-x: auto; max-width: 100%; }
 
 /* ── Question Card ────────────────────────────────────────────────────────── */
 .q-card {
+  flex-shrink: 0;  /* ← ADD THIS */
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   overflow: hidden;

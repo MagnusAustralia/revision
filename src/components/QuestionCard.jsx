@@ -1,8 +1,7 @@
 /**
  * components/QuestionCard.jsx
  */
-import React, { useState } from 'react'
-import { MathJax } from 'better-react-mathjax'
+import React, { useState, useEffect, useRef } from 'react'
 import NoteModal from './NoteModal'
 import FinancialTable from './FinancialTable'
 
@@ -10,6 +9,19 @@ const DIFF = {
   easy:   { bg: 'var(--success-dim)',  text: 'var(--success)'  },
   medium: { bg: 'var(--warning-dim)',  text: 'var(--warning)'  },
   hard:   { bg: 'var(--danger-dim)',   text: 'var(--danger)'   },
+}
+
+function useScopedTypeset(ref, deps) {
+  useEffect(() => {
+    if (!ref.current) return
+    const id = setTimeout(() => {
+      if (ref.current && window.MathJax?.typesetPromise) {
+        window.MathJax.typesetPromise([ref.current]).catch(() => {})
+      }
+    }, 50)
+    return () => clearTimeout(id)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, deps)
 }
 
 function EyeIcon({ crossed }) {
@@ -53,7 +65,12 @@ function QuestionText({ text, mode }) {
       </div>
     )
   }
-  return <MathJax className="q-text">{text}</MathJax>
+  return (
+    <div
+      className="q-text"
+      dangerouslySetInnerHTML={{ __html: text }}
+    />
+  )
 }
 
 function SolutionContent({ solution, mode }) {
@@ -76,13 +93,22 @@ function SolutionContent({ solution, mode }) {
       </div>
     )
   }
-  return <MathJax className="reveal-content">{solution}</MathJax>
+  return (
+    <div
+      className="reveal-content"
+      dangerouslySetInnerHTML={{ __html: solution }}
+    />
+  )
 }
 
 export default function QuestionCard({ question, index, noteText, onNoteSave }) {
   const [showAnswer,  setShowAnswer]  = useState(false)
   const [showWorking, setShowWorking] = useState(false)
   const [noteOpen,    setNoteOpen]    = useState(false)
+
+  const cardRef = useRef(null)  
+
+  useScopedTypeset(cardRef, [question.question, showAnswer, showWorking])  // ← add hook
 
   const { meta } = question
   const mode       = meta.mode || 'math'
@@ -93,7 +119,7 @@ export default function QuestionCard({ question, index, noteText, onNoteSave }) 
 
   return (
     <>
-      <div className="q-card">
+      <div className="q-card" ref={cardRef}>
         <div className="q-card-header">
           <div className="q-card-header-left">
             <span className="q-number">Q{index + 1}</span>
